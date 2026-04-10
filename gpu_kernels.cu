@@ -15,6 +15,7 @@
 #include <cuda_runtime.h>
 #include <cstring>   // memset
 #include <cstdio>    // fprintf
+#include <algorithm> // min
 
 // ------------------------------------------------------------
 // CUDA error-checking helper macro.
@@ -61,18 +62,28 @@ __global__ void countFrequenciesKernel(const char* d_data,
                                         int          n,
                                         int*         d_freq)
 {
-    // Compute the global index of this thread across all blocks
-    int idx = blockIdx.x * blockDim.x + threadIdx.x;
+    __shared__ int blockFreq[256];
 
-    // Bounds check: last block may have threads beyond array size
-    if (idx < n) {
-        // Cast to unsigned char so values are in range [0, 255]
+    int tid = threadIdx.x;
+    if (tid < 256) {
+        blockFreq[tid] = 0;
+    }
+    __syncthreads();
+
+    int idx    = blockIdx.x * blockDim.x + tid;
+    int stride = blockDim.x * gridDim.x;
+
+    // Grid-stride loop allows each thread to process multiple chars.
+    while (idx < n) {
         unsigned char c = static_cast<unsigned char>(d_data[idx]);
+        atomicAdd(&blockFreq[c], 1);
+        idx += stride;
+    }
+    __syncthreads();
 
-        // Atomically increment the frequency bucket for character c.
-        // This is the core GPU parallelism: every thread does this
-        // simultaneously for its own character position.
-        atomicAdd(&d_freq[c], 1);
+    // Merge per-block histogram into global histogram once per bucket.
+    if (tid < 256 && blockFreq[tid] > 0) {
+        atomicAdd(&d_freq[tid], blockFreq[tid]);
     }
 }
 
@@ -143,23 +154,15 @@ void gpuCountFrequency(const std::string& text,
     // ----------------------------------------------------------
     int threadsPerBlock = 256;
     int blocksPerGrid   = (n + threadsPerBlock - 1) / threadsPerBlock;
+    blocksPerGrid       = std::min(blocksPerGrid, 4096);
 
     // ----------------------------------------------------------
-    // Step 7: Record start event, launch kernel, record stop event
+    // Step 7: Warm up once, then record start/stop around one
+    //         real kernel launch so counts are not duplicated.
     // ----------------------------------------------------------
-    // === WARMUP: eliminate CUDA context init overhead ===
-// This dummy kernel launch forces CUDA to initialize
-// so it doesn't count against our actual timing.
-countFrequenciesKernel<<<1, 1>>>(d_data, 1, d_freq);
-cudaDeviceSynchronize();
-// Zero out freq again after warmup
-CUDA_CHECK(cudaMemset(d_freq, 0, 256 * sizeof(int)));
-// =====================================================
-
-// NOW start the real timing
-CUDA_CHECK(cudaEventRecord(startEvt));
-countFrequenciesKernel<<<blocksPerGrid, threadsPerBlock>>>(d_data, n, d_freq);
-CUDA_CHECK(cudaEventRecord(stopEvt));
+    countFrequenciesKernel<<<1, 1>>>(d_data, 1, d_freq);
+    CUDA_CHECK(cudaDeviceSynchronize());
+    CUDA_CHECK(cudaMemset(d_freq, 0, 256 * sizeof(int)));
 
     CUDA_CHECK(cudaEventRecord(startEvt));
 
@@ -170,7 +173,6 @@ CUDA_CHECK(cudaEventRecord(stopEvt));
     );
 
     CUDA_CHECK(cudaEventRecord(stopEvt));
-
     // Wait until the GPU has finished executing the kernel
     CUDA_CHECK(cudaEventSynchronize(stopEvt));
 

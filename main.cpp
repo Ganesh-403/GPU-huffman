@@ -53,12 +53,12 @@ int main() {
     // ----------------------------------------------------------
     // STEP 1: Read the input file into a std::string
     // ----------------------------------------------------------
-    const std::string filename = "sample.txt";
-    std::ifstream file(filename);
+    const std::string filename = "big.txt";
+    std::ifstream file(filename, std::ios::binary);
 
     if (!file.is_open()) {
         std::cerr << "[ERROR] Cannot open \"" << filename << "\".\n"
-                  << "        Make sure sample.txt is in the same\n"
+                  << "        Make sure input file is in the same\n"
                   << "        directory as the executable.\n";
         return 1;
     }
@@ -108,10 +108,8 @@ int main() {
     gpuCountFrequency(text, gpuFreq, gpuTimeMs);
     auto gpuTotalEnd   = std::chrono::high_resolution_clock::now();
 
-    double gpuTotalMs =
-        std::chrono::duration<double, std::milli>(gpuTotalStart - gpuTotalEnd).count();
-    gpuTotalMs = std::chrono::duration<double, std::milli>(
-                     gpuTotalEnd - gpuTotalStart).count();
+    double gpuTotalMs = std::chrono::duration<double, std::milli>(
+                            gpuTotalEnd - gpuTotalStart).count();
 
     // ----------------------------------------------------------
     // STEP 4: Verify that CPU and GPU produce identical results
@@ -217,8 +215,12 @@ int main() {
     std::cout << "GPU Total Time     : " << gpuTotalMs    << " ms  (incl. memcpy)\n\n";
 
     // Speedup: how many times faster is GPU kernel vs CPU?
-    double kernelSpeedup = cpuTimeMs / static_cast<double>(gpuTimeMs);
-    double totalSpeedup  = cpuTimeMs / gpuTotalMs;
+    double kernelSpeedup = (gpuTimeMs > 0.0f)
+                               ? (cpuTimeMs / static_cast<double>(gpuTimeMs))
+                               : 0.0;
+    double totalSpeedup  = (gpuTotalMs > 0.0)
+                               ? (cpuTimeMs / gpuTotalMs)
+                               : 0.0;
 
     std::cout << "Kernel Speedup     : " << std::setprecision(4)
               << kernelSpeedup << "x\n";
@@ -242,6 +244,7 @@ int main() {
               << "multiple threads:\n";
     std::cout << "   Threads per block : 256\n";
     int blocks = (static_cast<int>(text.size()) + 255) / 256;
+    blocks = std::min(blocks, 4096);
     std::cout << "   Blocks launched   : " << blocks << "\n";
     std::cout << "   Total GPU threads : " << (blocks * 256) << "\n";
     std::cout << "   Each thread       : processes 1 character simultaneously\n";
