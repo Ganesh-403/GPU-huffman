@@ -22,13 +22,17 @@ the character **frequency counting** step of Huffman Encoding.
 ## Project Structure
 
 ```
-gpu-huffman/
-├── main.cpp           — Entry point; orchestrates all steps + output
+GPU huffman/
+├── main.cpp           — Entry point; orchestrates CPU/GPU implementations, timing & validation
 ├── huffman_cpu.h      — Data structures & CPU function declarations
-├── huffman_cpu.cpp    — CPU frequency count, Huffman tree, code generation
-├── gpu_kernels.h      — GPU wrapper function declaration
-├── gpu_kernels.cu     — CUDA kernel + device memory management
-├── sample.txt         — Input text file
+├── huffman_cpu.cpp    — CPU Huffman: frequency count, tree building, code generation
+├── gpu_kernels.h      — GPU kernel function declarations
+├── gpu_kernels.cu     — CUDA kernels + device memory management
+├── sample.txt         — Small test input (base file for generating larger datasets)
+├── big.txt            — Large test file (25MB+); use for demonstrating GPU speedup
+├── huffman.exe        — Compiled executable
+├── .git/              — Git repository metadata
+├── .gitignore         — Git ignore rules
 └── README.md          — This file
 ```
 
@@ -55,7 +59,7 @@ nvidia-smi
 Open **x64 Native Tools Command Prompt for VS** (or Developer PowerShell) and run:
 
 ```bash
-nvcc main.cpp huffman_cpu.cpp gpu_kernels.cu -o huffman.exe -std=c++17 -O2
+nvcc main.cpp huffman_cpu.cpp gpu_kernels.cu -o huffman.exe -std=c++17 -O2 -allow-unsupported-compiler
 ```
 
 ### Flag Explanations
@@ -67,25 +71,43 @@ nvcc main.cpp huffman_cpu.cpp gpu_kernels.cu -o huffman.exe -std=c++17 -O2
 | `-o huffman.exe`  | Output executable name                    |
 | `-std=c++17`      | Use C++17 standard                        |
 | `-O2`             | Compiler optimization level 2            |
+| `-allow-unsupported-compiler` | Allow MSVC versions newer than officially supported |
 
 ---
 
 ## How to Run
 
+### Quick Test (Small File)
 ```bash
-# Make sure sample.txt is in the same folder as huffman.exe
+huffman.exe
+```
+By default, the program reads `sample.txt`. This verifies correctness but shows minimal GPU speedup due to small data size.
+
+### Full Test (Large File - Recommended for GPU Speedup Demonstration)
+
+**Generate `big.txt` (25MB) using Command Prompt** (NOT PowerShell—PowerShell injects CR characters):
+```cmd
+cd /d "D:\BE\SEM 8\HPC Mini Project\GPU huffman"
+del big.txt
+for /L %i in (1,1,5000) do type sample.txt >> big.txt
+```
+
+Then recompile and run:
+```bash
+nvcc main.cpp huffman_cpu.cpp gpu_kernels.cu -o huffman.exe -std=c++17 -O2 -allow-unsupported-compiler
 huffman.exe
 ```
 
-To test with a larger file (better GPU performance):
-```bash
-# PowerShell: generate a 1MB file by repeating sample.txt
-$content = Get-Content sample.txt -Raw
-$big = $content * 500
-$big | Out-File -Encoding ASCII bigfile.txt
+With `big.txt` (25MB):
+- CPU time: ~7-8ms
+- GPU kernel time: ~2-3ms
+- Expected speedup: **~3x-4x faster on GPU**
 
-# Then rename bigfile.txt to sample.txt and re-run
-```
+### Important Notes
+- ⚠️ **Use Command Prompt (cmd.exe)** for file generation, NOT PowerShell
+  - PowerShell's file encoding adds CR (carriage return) characters, corrupting test data
+- ✓ **Modify `main.cpp` line** to read `big.txt` instead of `sample.txt` for larger tests
+- ✓ Test with different file sizes to observe when GPU parallelism becomes beneficial
 
 ---
 
