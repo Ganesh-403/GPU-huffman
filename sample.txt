@@ -1,0 +1,76 @@
+The quick brown fox jumps over the lazy dog. Pack my box with five dozen liquor jugs.
+How vexingly quick daft zebras jump! The five boxing wizards jump quickly.
+Sphinx of black quartz, judge my vow. Two driven jocks help fax my big quiz.
+The job requires extra pluck and zeal from every young wage earner.
+A mad boxer shot a quick, gloved jab to the jaw of his dizzy opponent.
+
+Huffman encoding is a lossless data compression algorithm. The idea is to assign variable-length
+codes to input characters, lengths of the assigned codes are based on the frequencies of
+corresponding characters. The most frequent character gets the smallest code and the least
+frequent character gets the largest code.
+
+The algorithm was developed by David A. Huffman while he was a Ph.D. student at MIT, and
+published in the 1952 paper "A Method for the Construction of Minimum-Redundancy Codes".
+
+In computer science and information theory, a Huffman code is a particular type of optimal
+prefix code that is commonly used for lossless data compression. The process of finding or
+using such a code proceeds by means of Huffman coding, an algorithm developed by David A. Huffman
+while he was a Ph.D. student at MIT, and published in the 1952 paper.
+
+A GPU, or Graphics Processing Unit, is a specialized electronic circuit originally designed to
+rapidly manipulate and alter memory to accelerate the creation of images in a frame buffer intended
+for output to a display device. Today, GPUs are used for parallel processing tasks in computing,
+artificial intelligence, and scientific simulations.
+
+CUDA (Compute Unified Device Architecture) is a parallel computing platform and programming model
+that allows developers to use NVIDIA GPUs for general-purpose processing. CUDA gives programmers
+direct access to the GPU virtual instruction set and memory through a C/C++ extension.
+
+In parallel computing, thousands of threads can run simultaneously on a GPU, each handling a small
+portion of a larger problem. For tasks like frequency counting, each thread can independently
+process one character without depending on the results of other threads, making it an ideal
+candidate for GPU acceleration using atomic operations.
+
+The priority queue data structure is commonly used to implement the Huffman algorithm. It is a
+type of container adapter, specifically designed such that its first element is always the
+greatest or least element of elements present, and elements are in non-increasing or non-decreasing
+order respectively across different implementations.
+
+Binary trees are the foundational data structure for Huffman encoding. Each leaf node represents
+a character, and internal nodes represent combined frequencies. The path from root to leaf
+defines the binary code for each character. Left edges represent 0 and right edges represent 1.
+
+The compression ratio achievable by Huffman coding depends on the entropy of the source text.
+For natural language text in English, typical compression ratios of 40-50 percent are achievable
+compared to standard 8-bit ASCII encoding. This makes Huffman coding a critical component in
+many compression standards including DEFLATE, JPEG, and MP3.
+
+Real-time applications such as video streaming, network packet compression, and file archiving
+all benefit from fast Huffman encoding. GPU acceleration of the frequency counting step, which
+processes large volumes of data, can significantly reduce the overall encoding latency, especially
+when dealing with multi-megabyte or gigabyte-scale inputs.
+
+This project demonstrates the fundamental concept: by launching one GPU thread per character,
+we can count frequencies in parallel rather than sequentially, showcasing the power of CUDA
+and modern GPU architecture for data processing tasks commonly found in systems programming.
+
+abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789
+abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789
+abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789
+The five boxing wizards jump quickly. Quick fox jumps nightly above wizard.
+Pack my box with five dozen liquor jugs. How quickly daft jumping zebras vex.
+The job requires extra pluck and zeal from every young wage earner in the system.
+Bright vixens jump dozy fowl quack. Sphinx of black quartz judge my vow today.
+Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt
+ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco
+laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in
+voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat
+non proident, sunt in culpa qui officia deserunt mollit anim id est laborum et dolorum magna.
+Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque laudantium,
+totam rem aperiam, eaque ipsa quae ab illo inventore veritatis et quasi architecto beatae vitae
+dicta sunt explicabo. Nemo enim ipsam voluptatem quia voluptas sit aspernatur aut odit aut fugit,
+sed quia consequuntur magni dolores eos qui ratione voluptatem sequi nesciunt.
+At vero eos et accusamus et iusto odio dignissimos ducimus qui blanditiis praesentium voluptatum
+deleniti atque corrupti quos dolores et quas molestias excepturi sint occaecati cupiditate non
+provident, similique sunt in culpa qui officia deserunt mollitia animi, id est laborum et dolorum
+fuga. Et harum quidem rerum facilis est et expedita distinctio.

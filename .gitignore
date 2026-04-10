@@ -1,0 +1,48 @@
+# Build outputs
+huffman.exe
+*.exe
+*.out
+*.app
+
+# C/C++/CUDA intermediate artifacts
+*.o
+*.obj
+*.lo
+*.la
+*.a
+*.lib
+*.so
+*.dll
+*.dylib
+*.exp
+*.ilk
+*.pdb
+*.idb
+*.pch
+*.ptx
+*.cubin
+
+# CMake / build directories
+build/
+cmake-build-*/
+CMakeFiles/
+CMakeCache.txt
+compile_commands.json
+
+# Visual Studio / VS Code local files
+.vs/
+*.VC.db
+*.VC.opendb
+*.suo
+*.user
+*.userosscache
+*.sln.docstates
+
+# Logs and temp files
+*.log
+*.tmp
+*.temp
+
+# OS files
+.DS_Store
+Thumbs.db
