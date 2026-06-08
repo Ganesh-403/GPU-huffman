@@ -2,6 +2,8 @@
 #include "../utils/cuda_utils.h"
 #include <cuda_runtime.h>
 #include <device_launch_parameters.h>
+#include <vector>
+#include <memory>
 
 namespace gpu_huffman {
 
@@ -102,21 +104,108 @@ FrequencyResult CudaFrequencyCounter::count(const std::string& text) {
     result.method_name = name();
 
     size_t n = text.size();
-    
-    // Memory Management using RAII
+    if (n == 0) return result;
+
+    if (type_ == CudaKernelType::UNIFIED_MEMORY) {
+        UnifiedBuffer<char> unified_data(n);
+        UnifiedBuffer<uint32_t> unified_freq(256);
+
+        std::memcpy(unified_data.get(), text.c_str(), n);
+        unified_freq.zero();
+
+        GpuEvent start, stop;
+
+        int threadsPerBlock = 256;
+        int blocksPerGrid = static_cast<int>((n + threadsPerBlock - 1) / threadsPerBlock);
+        blocksPerGrid = std::min(blocksPerGrid, 2048);
+
+        start.record();
+
+        int device = 0;
+        CUDA_CHECK(cudaGetDevice(&device));
+        unified_data.prefetch_to_device(device);
+        unified_freq.prefetch_to_device(device);
+
+        count_shared_kernel<<<blocksPerGrid, threadsPerBlock>>>(unified_data.get(), n, unified_freq.get());
+
+        unified_freq.prefetch_to_host();
+        stop.record();
+        stop.synchronize();
+
+        result.execution_time_ms = GpuEvent::elapsed_time(start, stop);
+        std::memcpy(result.frequencies, unified_freq.get(), 256 * sizeof(uint32_t));
+
+        return result;
+    }
+
+    if (type_ == CudaKernelType::MULTI_STREAM) {
+        const int num_streams = 4;
+        std::vector<std::vector<uint32_t>> host_freq(num_streams, std::vector<uint32_t>(256, 0));
+
+        GpuBuffer<char> d_data(n);
+        std::vector<std::unique_ptr<GpuBuffer<uint32_t>>> d_freq_buffers;
+        std::vector<std::unique_ptr<GpuStream>> streams;
+
+        for (int i = 0; i < num_streams; ++i) {
+            d_freq_buffers.push_back(std::make_unique<GpuBuffer<uint32_t>>(256));
+            d_freq_buffers[i]->zero();
+            streams.push_back(std::make_unique<GpuStream>());
+        }
+
+        GpuEvent start, stop;
+        start.record();
+
+        size_t chunk_size = n / num_streams;
+        for (int i = 0; i < num_streams; ++i) {
+            size_t offset = i * chunk_size;
+            size_t size = (i == num_streams - 1) ? (n - offset) : chunk_size;
+
+            if (size == 0) continue;
+
+            CUDA_CHECK(cudaMemcpyAsync(d_data.get() + offset, text.c_str() + offset, size * sizeof(char), 
+                                       cudaMemcpyHostToDevice, streams[i]->get()));
+
+            int threadsPerBlock = 256;
+            int blocksPerGrid = static_cast<int>((size + threadsPerBlock - 1) / threadsPerBlock);
+            blocksPerGrid = std::min(blocksPerGrid, 512);
+
+            count_shared_kernel<<<blocksPerGrid, threadsPerBlock, 0, streams[i]->get()>>>(
+                d_data.get() + offset, size, d_freq_buffers[i]->get()
+            );
+
+            CUDA_CHECK(cudaMemcpyAsync(host_freq[i].data(), d_freq_buffers[i]->get(), 256 * sizeof(uint32_t), 
+                                       cudaMemcpyDeviceToHost, streams[i]->get()));
+        }
+
+        for (int i = 0; i < num_streams; ++i) {
+            streams[i]->synchronize();
+        }
+
+        stop.record();
+        stop.synchronize();
+
+        result.execution_time_ms = GpuEvent::elapsed_time(start, stop);
+
+        for (int i = 0; i < num_streams; ++i) {
+            for (int j = 0; j < 256; ++j) {
+                result.frequencies[j] += host_freq[i][j];
+            }
+        }
+
+        return result;
+    }
+
+    // Default modes: NAIVE, SHARED, WARP
     GpuBuffer<char> d_data(n);
     GpuBuffer<uint32_t> d_freq(256);
 
     d_data.copy_to_device(text.c_str());
     d_freq.zero();
 
-    // Timing
     GpuEvent start, stop;
-    
+
     int threadsPerBlock = 256;
     int blocksPerGrid = static_cast<int>((n + threadsPerBlock - 1) / threadsPerBlock);
-    // Limit blocks to avoid excessive overhead on small inputs, 
-    // but keep enough to saturate the GPU.
     blocksPerGrid = std::min(blocksPerGrid, 2048);
 
     start.record();
@@ -132,7 +221,6 @@ FrequencyResult CudaFrequencyCounter::count(const std::string& text) {
             count_warp_optimized_kernel<<<blocksPerGrid, threadsPerBlock>>>(d_data.get(), n, d_freq.get());
             break;
         default:
-            // Fallback to shared for now
             count_shared_kernel<<<blocksPerGrid, threadsPerBlock>>>(d_data.get(), n, d_freq.get());
             break;
     }

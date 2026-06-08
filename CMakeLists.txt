@@ -35,26 +35,26 @@ find_package(OpenMP REQUIRED)
 
 # Include directories
 include_directories(
-    ${CMAKE_CURRENT_SOURCE_DIR}
-    ${CMAKE_CURRENT_SOURCE_DIR}/core
-    ${CMAKE_CURRENT_SOURCE_DIR}/cuda
-    ${CMAKE_CURRENT_SOURCE_DIR}/cpu
-    ${CMAKE_CURRENT_SOURCE_DIR}/utils
-    ${CMAKE_CURRENT_SOURCE_DIR}/benchmark
+    ${CMAKE_CURRENT_SOURCE_DIR}/src
+    ${CMAKE_CURRENT_SOURCE_DIR}/src/core
+    ${CMAKE_CURRENT_SOURCE_DIR}/src/cuda
+    ${CMAKE_CURRENT_SOURCE_DIR}/src/cpu
+    ${CMAKE_CURRENT_SOURCE_DIR}/src/utils
+    ${CMAKE_CURRENT_SOURCE_DIR}/src/benchmark
 )
 
 # Source files
 set(SOURCES
-    main.cpp
-    core/huffman_tree.cpp
-    cpu/cpu_frequency_counter.cpp
-    benchmark/benchmark.cpp
+    src/main.cpp
+    src/core/huffman_tree.cpp
+    src/cpu/cpu_frequency_counter.cpp
+    src/benchmark/benchmark.cpp
 )
 
 if(HAS_CUDA)
-    list(APPEND SOURCES cuda/cuda_frequency_counter.cu)
+    list(APPEND SOURCES src/cuda/cuda_frequency_counter.cu)
 else()
-    list(APPEND SOURCES cuda/cuda_frequency_counter.cpp)
+    list(APPEND SOURCES src/cuda/cuda_frequency_counter.cpp)
 endif()
 
 # Executable

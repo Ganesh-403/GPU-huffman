@@ -24,21 +24,25 @@ void print_header() {
 int main(int argc, char** argv) {
     print_header();
 
-    std::string input_file = "big.txt";
+    std::string input_file = "data/big.txt";
     if (argc > 1) {
         input_file = argv[1];
     }
 
     // 1. Load Data
     Logger::info("Loading input file: " + input_file);
-    std::ifstream file(input_file, std::ios::binary);
+    std::ifstream file(input_file, std::ios::binary | std::ios::ate);
     if (!file.is_open()) {
         Logger::error("Failed to open " + input_file);
         return 1;
     }
-    std::ostringstream buffer;
-    buffer << file.rdbuf();
-    std::string text = buffer.str();
+    std::streamsize size = file.tellg();
+    file.seekg(0, std::ios::beg);
+    std::string text(static_cast<size_t>(size), '\0');
+    if (size > 0 && !file.read(&text[0], size)) {
+        Logger::error("Failed to read " + input_file);
+        return 1;
+    }
     Logger::success("Loaded " + std::to_string(text.size()) + " bytes.");
 
     // 2. Setup Benchmark Harness
@@ -48,6 +52,8 @@ int main(int argc, char** argv) {
     harness.add_counter(std::make_unique<CudaFrequencyCounter>(CudaKernelType::NAIVE_GLOBAL));
     harness.add_counter(std::make_unique<CudaFrequencyCounter>(CudaKernelType::SHARED_MEMORY));
     harness.add_counter(std::make_unique<CudaFrequencyCounter>(CudaKernelType::WARP_OPTIMIZED));
+    harness.add_counter(std::make_unique<CudaFrequencyCounter>(CudaKernelType::MULTI_STREAM));
+    harness.add_counter(std::make_unique<CudaFrequencyCounter>(CudaKernelType::UNIFIED_MEMORY));
 
     // 3. Run Benchmark
     BenchmarkConfig config;

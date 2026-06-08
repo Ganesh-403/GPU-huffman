@@ -1,7 +1,7 @@
 # ninja log v6
-42	366	8026206747468516	CMakeFiles/gpu_huffman.dir/cuda/cuda_frequency_counter.cpp.obj	a467edf9cdfcc612
-23	367	8026206747301755	CMakeFiles/gpu_huffman.dir/cpu/cpu_frequency_counter.cpp.obj	c0603fe8c662e465
-16	410	8026206747218614	CMakeFiles/gpu_huffman.dir/core/huffman_tree.cpp.obj	b93dfc0881de9bc1
-5	563	8026206747136069	CMakeFiles/gpu_huffman.dir/main.cpp.obj	229d70d69f190b20
-33	567	8026206747411529	CMakeFiles/gpu_huffman.dir/benchmark/benchmark.cpp.obj	7618395470dda1d6
-567	1013	8026206752747142	bin/gpu_huffman.exe	f7559676f86d4fc8
+35	614	8026264555217995	CMakeFiles/gpu_huffman.dir/src/cpu/cpu_frequency_counter.cpp.obj	9d90d905da09ae35
+57	648	8026264555460347	CMakeFiles/gpu_huffman.dir/src/cuda/cuda_frequency_counter.cpp.obj	817373723e256f01
+24	697	8026264555126029	CMakeFiles/gpu_huffman.dir/src/core/huffman_tree.cpp.obj	28abcb4f78b661ba
+47	1143	8026264555360186	CMakeFiles/gpu_huffman.dir/src/benchmark/benchmark.cpp.obj	f1c678246c02f969
+7	1200	8026264554952744	CMakeFiles/gpu_huffman.dir/src/main.cpp.obj	c009704b3dff2dba
+1200	1433	8026264566880204	bin/gpu_huffman.exe	85bdaea34486117f

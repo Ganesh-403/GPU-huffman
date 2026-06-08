@@ -3,6 +3,7 @@
 
 #include <chrono>
 #include <cstring>
+#include <omp.h>
 
 namespace gpu_huffman {
 
@@ -26,8 +27,28 @@ FrequencyResult CudaFrequencyCounter::count(const std::string& text) {
 
     auto start = std::chrono::high_resolution_clock::now();
 
-    for (unsigned char c : text) {
-        result.frequencies[c]++;
+    if (type_ == CudaKernelType::SHARED_MEMORY || 
+        type_ == CudaKernelType::WARP_OPTIMIZED || 
+        type_ == CudaKernelType::MULTI_STREAM) {
+        #pragma omp parallel
+        {
+            uint32_t local_freq[256] = {0};
+            #pragma omp for nowait
+            for (long long i = 0; i < static_cast<long long>(text.size()); ++i) {
+                local_freq[static_cast<unsigned char>(text[i])]++;
+            }
+
+            #pragma omp critical
+            {
+                for (int i = 0; i < 256; ++i) {
+                    result.frequencies[i] += local_freq[i];
+                }
+            }
+        }
+    } else {
+        for (unsigned char c : text) {
+            result.frequencies[c]++;
+        }
     }
 
     auto end = std::chrono::high_resolution_clock::now();

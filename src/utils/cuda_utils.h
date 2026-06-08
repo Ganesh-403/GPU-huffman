@@ -81,6 +81,65 @@ private:
 };
 
 /**
+ * @brief RAII wrapper for Unified Memory (managed).
+ */
+template <typename T>
+class UnifiedBuffer {
+public:
+    explicit UnifiedBuffer(size_t count) : count_(count) {
+        CUDA_CHECK(cudaMallocManaged(&ptr_, count * sizeof(T)));
+    }
+
+    ~UnifiedBuffer() {
+        if (ptr_) {
+            cudaFree(ptr_);
+        }
+    }
+
+    // Disable copy
+    UnifiedBuffer(const UnifiedBuffer&) = delete;
+    UnifiedBuffer& operator=(const UnifiedBuffer&) = delete;
+
+    // Enable move
+    UnifiedBuffer(UnifiedBuffer&& other) noexcept : ptr_(other.ptr_), count_(other.count_) {
+        other.ptr_ = nullptr;
+        other.count_ = 0;
+    }
+
+    UnifiedBuffer& operator=(UnifiedBuffer&& other) noexcept {
+        if (this != &other) {
+            if (ptr_) cudaFree(ptr_);
+            ptr_ = other.ptr_;
+            count_ = other.count_;
+            other.ptr_ = nullptr;
+            other.count_ = 0;
+        }
+        return *this;
+    }
+
+    T* get() { return ptr_; }
+    const T* get() const { return ptr_; }
+    size_t count() const { return count_; }
+    size_t size_bytes() const { return count_ * sizeof(T); }
+
+    void prefetch_to_device(int device_id) {
+        CUDA_CHECK(cudaMemPrefetchAsync(ptr_, count_ * sizeof(T), device_id, 0));
+    }
+
+    void prefetch_to_host() {
+        CUDA_CHECK(cudaMemPrefetchAsync(ptr_, count_ * sizeof(T), cudaCpuDeviceId, 0));
+    }
+
+    void zero() {
+        std::memset(ptr_, 0, count_ * sizeof(T));
+    }
+
+private:
+    T* ptr_ = nullptr;
+    size_t count_ = 0;
+};
+
+/**
  * @brief RAII wrapper for CUDA Events.
  */
 class GpuEvent {

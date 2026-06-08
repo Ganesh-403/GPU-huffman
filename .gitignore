@@ -46,3 +46,9 @@ compile_commands.json
 # OS files
 .DS_Store
 Thumbs.db
+
+# Project-specific ignores
+build-msvc/
+benchmark_results.csv
+performance_dashboard.png
+

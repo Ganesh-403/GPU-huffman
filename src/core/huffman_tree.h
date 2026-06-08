@@ -2,7 +2,7 @@
 
 #include <vector>
 #include <string>
-#include <unordered_map>
+#include <array>
 #include <memory>
 #include <cstdint>
 
@@ -29,7 +29,7 @@ public:
     ~HuffmanTree();
 
     void build(const uint32_t frequencies[256]);
-    std::unordered_map<unsigned char, std::string> generate_codes();
+    std::array<std::string, 256> generate_codes();
     
     struct CompressionStats {
         size_t original_size_bits;
@@ -42,7 +42,7 @@ public:
 private:
     HuffmanNode* root_;
     void delete_tree(HuffmanNode* node);
-    void encode(HuffmanNode* node, std::string str, std::unordered_map<unsigned char, std::string>& huffman_code);
+    void encode(HuffmanNode* node, std::string str, std::array<std::string, 256>& huffman_code);
 };
 
 } // namespace gpu_huffman

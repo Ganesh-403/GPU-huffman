@@ -12,7 +12,7 @@
 
 # =============================================================================
 # Project: GPU_Huffman_Pro
-# Configurations: Debug
+# Configurations: Release
 # =============================================================================
 
 #############################################
@@ -24,7 +24,7 @@ ninja_required_version = 1.5
 #############################################
 # Set configuration variable for custom commands.
 
-CONFIGURATION = Debug
+CONFIGURATION = Release
 # =============================================================================
 # Include auxiliary files.
 
@@ -49,43 +49,43 @@ cmake_ninja_workdir = D$:\Projects\GPU$ huffman\build-msvc\
 
 build cmake_object_order_depends_target_gpu_huffman: phony || .
 
-build CMakeFiles\gpu_huffman.dir\main.cpp.obj: CXX_COMPILER__gpu_huffman_unscanned_Debug D$:\Projects\GPU$ huffman\main.cpp || cmake_object_order_depends_target_gpu_huffman
-  FLAGS = /DWIN32 /D_WINDOWS /GR /EHsc /Zi /Ob0 /Od /RTC1 -std:c++17 -MDd -openmp
-  INCLUDES = -I"D:\Projects\GPU huffman" -I"D:\Projects\GPU huffman\core" -I"D:\Projects\GPU huffman\cuda" -I"D:\Projects\GPU huffman\cpu" -I"D:\Projects\GPU huffman\utils" -I"D:\Projects\GPU huffman\benchmark"
+build CMakeFiles\gpu_huffman.dir\src\main.cpp.obj: CXX_COMPILER__gpu_huffman_unscanned_Release D$:\Projects\GPU$ huffman\src\main.cpp || cmake_object_order_depends_target_gpu_huffman
+  FLAGS = /DWIN32 /D_WINDOWS /GR /EHsc /O2 /Ob2 /DNDEBUG -std:c++17 -MD -openmp
+  INCLUDES = -I"D:\Projects\GPU huffman\src" -I"D:\Projects\GPU huffman\src\core" -I"D:\Projects\GPU huffman\src\cuda" -I"D:\Projects\GPU huffman\src\cpu" -I"D:\Projects\GPU huffman\src\utils" -I"D:\Projects\GPU huffman\src\benchmark"
   OBJECT_DIR = CMakeFiles\gpu_huffman.dir
-  OBJECT_FILE_DIR = CMakeFiles\gpu_huffman.dir
+  OBJECT_FILE_DIR = CMakeFiles\gpu_huffman.dir\src
   TARGET_COMPILE_PDB = CMakeFiles\gpu_huffman.dir\
   TARGET_PDB = bin\gpu_huffman.pdb
 
-build CMakeFiles\gpu_huffman.dir\core\huffman_tree.cpp.obj: CXX_COMPILER__gpu_huffman_unscanned_Debug D$:\Projects\GPU$ huffman\core\huffman_tree.cpp || cmake_object_order_depends_target_gpu_huffman
-  FLAGS = /DWIN32 /D_WINDOWS /GR /EHsc /Zi /Ob0 /Od /RTC1 -std:c++17 -MDd -openmp
-  INCLUDES = -I"D:\Projects\GPU huffman" -I"D:\Projects\GPU huffman\core" -I"D:\Projects\GPU huffman\cuda" -I"D:\Projects\GPU huffman\cpu" -I"D:\Projects\GPU huffman\utils" -I"D:\Projects\GPU huffman\benchmark"
+build CMakeFiles\gpu_huffman.dir\src\core\huffman_tree.cpp.obj: CXX_COMPILER__gpu_huffman_unscanned_Release D$:\Projects\GPU$ huffman\src\core\huffman_tree.cpp || cmake_object_order_depends_target_gpu_huffman
+  FLAGS = /DWIN32 /D_WINDOWS /GR /EHsc /O2 /Ob2 /DNDEBUG -std:c++17 -MD -openmp
+  INCLUDES = -I"D:\Projects\GPU huffman\src" -I"D:\Projects\GPU huffman\src\core" -I"D:\Projects\GPU huffman\src\cuda" -I"D:\Projects\GPU huffman\src\cpu" -I"D:\Projects\GPU huffman\src\utils" -I"D:\Projects\GPU huffman\src\benchmark"
   OBJECT_DIR = CMakeFiles\gpu_huffman.dir
-  OBJECT_FILE_DIR = CMakeFiles\gpu_huffman.dir\core
+  OBJECT_FILE_DIR = CMakeFiles\gpu_huffman.dir\src\core
   TARGET_COMPILE_PDB = CMakeFiles\gpu_huffman.dir\
   TARGET_PDB = bin\gpu_huffman.pdb
 
-build CMakeFiles\gpu_huffman.dir\cpu\cpu_frequency_counter.cpp.obj: CXX_COMPILER__gpu_huffman_unscanned_Debug D$:\Projects\GPU$ huffman\cpu\cpu_frequency_counter.cpp || cmake_object_order_depends_target_gpu_huffman
-  FLAGS = /DWIN32 /D_WINDOWS /GR /EHsc /Zi /Ob0 /Od /RTC1 -std:c++17 -MDd -openmp
-  INCLUDES = -I"D:\Projects\GPU huffman" -I"D:\Projects\GPU huffman\core" -I"D:\Projects\GPU huffman\cuda" -I"D:\Projects\GPU huffman\cpu" -I"D:\Projects\GPU huffman\utils" -I"D:\Projects\GPU huffman\benchmark"
+build CMakeFiles\gpu_huffman.dir\src\cpu\cpu_frequency_counter.cpp.obj: CXX_COMPILER__gpu_huffman_unscanned_Release D$:\Projects\GPU$ huffman\src\cpu\cpu_frequency_counter.cpp || cmake_object_order_depends_target_gpu_huffman
+  FLAGS = /DWIN32 /D_WINDOWS /GR /EHsc /O2 /Ob2 /DNDEBUG -std:c++17 -MD -openmp
+  INCLUDES = -I"D:\Projects\GPU huffman\src" -I"D:\Projects\GPU huffman\src\core" -I"D:\Projects\GPU huffman\src\cuda" -I"D:\Projects\GPU huffman\src\cpu" -I"D:\Projects\GPU huffman\src\utils" -I"D:\Projects\GPU huffman\src\benchmark"
   OBJECT_DIR = CMakeFiles\gpu_huffman.dir
-  OBJECT_FILE_DIR = CMakeFiles\gpu_huffman.dir\cpu
+  OBJECT_FILE_DIR = CMakeFiles\gpu_huffman.dir\src\cpu
   TARGET_COMPILE_PDB = CMakeFiles\gpu_huffman.dir\
   TARGET_PDB = bin\gpu_huffman.pdb
 
-build CMakeFiles\gpu_huffman.dir\benchmark\benchmark.cpp.obj: CXX_COMPILER__gpu_huffman_unscanned_Debug D$:\Projects\GPU$ huffman\benchmark\benchmark.cpp || cmake_object_order_depends_target_gpu_huffman
-  FLAGS = /DWIN32 /D_WINDOWS /GR /EHsc /Zi /Ob0 /Od /RTC1 -std:c++17 -MDd -openmp
-  INCLUDES = -I"D:\Projects\GPU huffman" -I"D:\Projects\GPU huffman\core" -I"D:\Projects\GPU huffman\cuda" -I"D:\Projects\GPU huffman\cpu" -I"D:\Projects\GPU huffman\utils" -I"D:\Projects\GPU huffman\benchmark"
+build CMakeFiles\gpu_huffman.dir\src\benchmark\benchmark.cpp.obj: CXX_COMPILER__gpu_huffman_unscanned_Release D$:\Projects\GPU$ huffman\src\benchmark\benchmark.cpp || cmake_object_order_depends_target_gpu_huffman
+  FLAGS = /DWIN32 /D_WINDOWS /GR /EHsc /O2 /Ob2 /DNDEBUG -std:c++17 -MD -openmp
+  INCLUDES = -I"D:\Projects\GPU huffman\src" -I"D:\Projects\GPU huffman\src\core" -I"D:\Projects\GPU huffman\src\cuda" -I"D:\Projects\GPU huffman\src\cpu" -I"D:\Projects\GPU huffman\src\utils" -I"D:\Projects\GPU huffman\src\benchmark"
   OBJECT_DIR = CMakeFiles\gpu_huffman.dir
-  OBJECT_FILE_DIR = CMakeFiles\gpu_huffman.dir\benchmark
+  OBJECT_FILE_DIR = CMakeFiles\gpu_huffman.dir\src\benchmark
   TARGET_COMPILE_PDB = CMakeFiles\gpu_huffman.dir\
   TARGET_PDB = bin\gpu_huffman.pdb
 
-build CMakeFiles\gpu_huffman.dir\cuda\cuda_frequency_counter.cpp.obj: CXX_COMPILER__gpu_huffman_unscanned_Debug D$:\Projects\GPU$ huffman\cuda\cuda_frequency_counter.cpp || cmake_object_order_depends_target_gpu_huffman
-  FLAGS = /DWIN32 /D_WINDOWS /GR /EHsc /Zi /Ob0 /Od /RTC1 -std:c++17 -MDd -openmp
-  INCLUDES = -I"D:\Projects\GPU huffman" -I"D:\Projects\GPU huffman\core" -I"D:\Projects\GPU huffman\cuda" -I"D:\Projects\GPU huffman\cpu" -I"D:\Projects\GPU huffman\utils" -I"D:\Projects\GPU huffman\benchmark"
+build CMakeFiles\gpu_huffman.dir\src\cuda\cuda_frequency_counter.cpp.obj: CXX_COMPILER__gpu_huffman_unscanned_Release D$:\Projects\GPU$ huffman\src\cuda\cuda_frequency_counter.cpp || cmake_object_order_depends_target_gpu_huffman
+  FLAGS = /DWIN32 /D_WINDOWS /GR /EHsc /O2 /Ob2 /DNDEBUG -std:c++17 -MD -openmp
+  INCLUDES = -I"D:\Projects\GPU huffman\src" -I"D:\Projects\GPU huffman\src\core" -I"D:\Projects\GPU huffman\src\cuda" -I"D:\Projects\GPU huffman\src\cpu" -I"D:\Projects\GPU huffman\src\utils" -I"D:\Projects\GPU huffman\src\benchmark"
   OBJECT_DIR = CMakeFiles\gpu_huffman.dir
-  OBJECT_FILE_DIR = CMakeFiles\gpu_huffman.dir\cuda
+  OBJECT_FILE_DIR = CMakeFiles\gpu_huffman.dir\src\cuda
   TARGET_COMPILE_PDB = CMakeFiles\gpu_huffman.dir\
   TARGET_PDB = bin\gpu_huffman.pdb
 
@@ -97,9 +97,9 @@ build CMakeFiles\gpu_huffman.dir\cuda\cuda_frequency_counter.cpp.obj: CXX_COMPIL
 #############################################
 # Link the executable bin\gpu_huffman.exe
 
-build bin\gpu_huffman.exe: CXX_EXECUTABLE_LINKER__gpu_huffman_Debug CMakeFiles\gpu_huffman.dir\main.cpp.obj CMakeFiles\gpu_huffman.dir\core\huffman_tree.cpp.obj CMakeFiles\gpu_huffman.dir\cpu\cpu_frequency_counter.cpp.obj CMakeFiles\gpu_huffman.dir\benchmark\benchmark.cpp.obj CMakeFiles\gpu_huffman.dir\cuda\cuda_frequency_counter.cpp.obj
-  FLAGS = /DWIN32 /D_WINDOWS /GR /EHsc /Zi /Ob0 /Od /RTC1 -MDd
-  LINK_FLAGS = /machine:x64 /debug /INCREMENTAL /subsystem:console
+build bin\gpu_huffman.exe: CXX_EXECUTABLE_LINKER__gpu_huffman_Release CMakeFiles\gpu_huffman.dir\src\main.cpp.obj CMakeFiles\gpu_huffman.dir\src\core\huffman_tree.cpp.obj CMakeFiles\gpu_huffman.dir\src\cpu\cpu_frequency_counter.cpp.obj CMakeFiles\gpu_huffman.dir\src\benchmark\benchmark.cpp.obj CMakeFiles\gpu_huffman.dir\src\cuda\cuda_frequency_counter.cpp.obj
+  FLAGS = /DWIN32 /D_WINDOWS /GR /EHsc /O2 /Ob2 /DNDEBUG -MD
+  LINK_FLAGS = /machine:x64 /INCREMENTAL:NO /subsystem:console
   LINK_LIBRARIES = kernel32.lib user32.lib gdi32.lib winspool.lib shell32.lib ole32.lib oleaut32.lib uuid.lib comdlg32.lib advapi32.lib
   OBJECT_DIR = CMakeFiles\gpu_huffman.dir
   POST_BUILD = cd .

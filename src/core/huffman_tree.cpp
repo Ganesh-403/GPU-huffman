@@ -41,7 +41,7 @@ void HuffmanTree::build(const uint32_t frequencies[256]) {
     root_ = pq.top();
 }
 
-void HuffmanTree::encode(HuffmanNode* node, std::string str, std::unordered_map<unsigned char, std::string>& huffman_code) {
+void HuffmanTree::encode(HuffmanNode* node, std::string str, std::array<std::string, 256>& huffman_code) {
     if (node == nullptr) return;
 
     if (!node->left && !node->right) {
@@ -52,8 +52,8 @@ void HuffmanTree::encode(HuffmanNode* node, std::string str, std::unordered_map<
     encode(node->right, str + "1", huffman_code);
 }
 
-std::unordered_map<unsigned char, std::string> HuffmanTree::generate_codes() {
-    std::unordered_map<unsigned char, std::string> huffman_code;
+std::array<std::string, 256> HuffmanTree::generate_codes() {
+    std::array<std::string, 256> huffman_code;
     if (root_ && !root_->left && !root_->right) {
         // Special case: single character
         huffman_code[root_->ch] = "0";

@@ -22,7 +22,7 @@ A high-performance, production-grade GPU acceleration project demonstrating adva
 
 ```mermaid
 graph TD
-    A[main.cpp] --> B[BenchmarkHarness]
+    A[src/main.cpp] --> B[BenchmarkHarness]
     B --> C[IFrequencyCounter Interface]
     C --> D[CpuFrequencyCounter]
     C --> E[OpenMpFrequencyCounter]
@@ -35,6 +35,19 @@ graph TD
     H --> I[Python Visualization]
 ```
 
+### 📂 Directory Structure
+
+The repository is organized as follows:
+* **src/**: All C++ and CUDA source files.
+  * **core/**: Base Huffman tree node representations and code building.
+  * **cpu/**: Host serial and OpenMP multi-threaded counter implementations.
+  * **cuda/**: GPU kernel code and CPU fallback drivers.
+  * **utils/**: RAII helpers (`GpuBuffer`, `UnifiedBuffer`, `GpuStream`) and log utilities.
+  * **benchmark/**: Test configuration and latency recording harness.
+* **data/**: Text datasets and inputs for benchmarking.
+* **scripts/**: Support tools (including dashboard visualization).
+* **docs/**: Development guides and optimization logs.
+
 ## 🛠️ Performance Engineering
 
 This project goes beyond simple "clean code." It implements several state-of-the-art GPU optimization strategies:
@@ -45,6 +58,7 @@ This project goes beyond simple "clean code." It implements several state-of-the
 | **L2: Shared** | Per-Block Histograms | Reduces global memory traffic by aggregating counts in high-speed L1/Shared memory. |
 | **L3: Warp** | Multi-Bank Histograms | Further reduces shared memory bank conflicts by using interleaved sub-histograms per warp. |
 | **L4: Async** | CUDA Streams | Overlaps data transfer (H2D/D2H) with kernel execution for hidden latency. |
+| **L5: Managed** | Unified Memory | Simplifies developer programmability using a single managed address space with async prefetching. |
 
 ## 📊 Benchmarking Results
 
@@ -91,7 +105,7 @@ If you are using a regular PowerShell terminal, CMake may select MinGW instead o
 Run the sample benchmark:
 
 ```cmd
-.\build-msvc\bin\gpu_huffman.exe .\big.txt
+.\build-msvc\bin\gpu_huffman.exe .\data\big.txt
 ```
 
 Or run your own input file:
