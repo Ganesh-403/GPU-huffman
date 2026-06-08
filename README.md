@@ -135,6 +135,5 @@ Distributed under the MIT License. See `LICENSE` for more information.
 
 ---
 
-**Author**: [Your Name]
-**Portfolio**: [Link to your portfolio/LinkedIn]
+**Author**: [Ganesh Kambli](https://www.linkedin.com/in/ganeshkambli/)
 ```
