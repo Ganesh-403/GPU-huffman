@@ -134,6 +134,5 @@ python .\scripts\visualize_results.py
 Distributed under the MIT License. See `LICENSE` for more information.
 
 ---
-```
 **Author**: [Ganesh Kambli](https://www.linkedin.com/in/ganeshkambli/)
-```
+
