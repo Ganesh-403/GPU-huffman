@@ -58,23 +58,57 @@ On an NVIDIA RTX GPU, the Shared Memory implementation typically achieves **10x 
 ## 💻 Getting Started
 
 ### Prerequisites
-- CUDA Toolkit 11.8+
+- **CUDA Toolkit**: 13.2+ for VS 2026 support (CUDA 13.1 only supports VS 2019–2022)
 - C++17 Compatible Compiler (MSVC 2019+ or GCC 9+)
 - CMake 3.18+
 - Python 3.8+ (for visualization)
+- Visual Studio 2026 Build Tools with the MSVC toolset for GPU builds on Windows
 
-### Build
-```bash
-mkdir build && cd build
-cmake ..
-cmake --build . --config Release
+**Note on Windows & CUDA:**
+- The CUDA build path requires MSVC as the host compiler.
+- CUDA 13.1 does not support VS 2026; you must upgrade to CUDA 13.2+ or use VS 2022/2019.
+- If CMake detects an unsupported CUDA/compiler pair, it automatically falls back to a CPU-only implementation so the executable still builds and runs.
+
+#### Upgrading CUDA
+If you have VS 2026 installed and CUDA 13.1, download and install [CUDA Toolkit 13.2+](https://developer.nvidia.com/cuda-downloads) or [the latest version](https://developer.nvidia.com/cuda-toolkit-archive). Then reconfigure:
+
+```cmd
+rmdir /s /q build-msvc
+cmake -S . -B build-msvc
 ```
 
-### Run Benchmarks
-```bash
-./bin/gpu_huffman big.txt
-python scripts/visualize_results.py
+### Windows Quick Start
+Open the VS Code terminal with the `Developer Command Prompt for VS 2026` profile, then run:
+
+```cmd
+cd /d "D:\Projects\GPU huffman"
+cmake -S . -B build-msvc
+cmake --build build-msvc
 ```
+
+If you are using a regular PowerShell terminal, CMake may select MinGW instead of MSVC and the project will fall back to the CPU implementation.
+
+Run the sample benchmark:
+
+```cmd
+.\build-msvc\bin\gpu_huffman.exe .\big.txt
+```
+
+Or run your own input file:
+
+```cmd
+.\build-msvc\bin\gpu_huffman.exe D:\path\to\your\file.txt
+```
+
+Generate the visual report:
+
+```cmd
+python .\scripts\visualize_results.py
+```
+
+### Notes
+- The default `build-msvc` folder keeps the MSVC configuration separate from the earlier MinGW build tree.
+- If you want the GPU/CUDA path, always configure from the Developer Command Prompt, not a regular PowerShell or CMD session.
 
 ## 📚 Lessons Learned & Bottlenecks
 

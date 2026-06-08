@@ -1,0 +1,6 @@
+Method,AvgTimeMs,MinTimeMs,MaxTimeMs,ThroughputGbs
+CPU Serial,60.7643,57.941,65.2828,1.35548
+CPU OpenMP (Multithreaded),215.092,77.6829,469.76,0.38293
+CUDA Fallback (CPU Serial),125.996,59.0469,170.802,0.65371
+CUDA Fallback (CPU Shared),58.8539,56.9908,63.6579,1.39948
+CUDA Fallback (CPU Warp),59.7606,57.0288,73.6463,1.37825

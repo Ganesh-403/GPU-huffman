@@ -34,7 +34,7 @@ FrequencyResult OpenMpFrequencyCounter::count(const std::string& text) {
     {
         uint32_t local_freq[256] = {0};
         #pragma omp for nowait
-        for (size_t i = 0; i < text.size(); ++i) {
+        for (long long i = 0; i < static_cast<long long>(text.size()); ++i) {
             local_freq[static_cast<unsigned char>(text[i])]++;
         }
 

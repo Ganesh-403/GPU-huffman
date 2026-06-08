@@ -1,5 +1,4 @@
 #include "utils/logger.h"
-#include "utils/cuda_utils.h"
 #include "cpu/cpu_frequency_counter.h"
 #include "cuda/cuda_frequency_counter.h"
 #include "core/huffman_tree.h"
